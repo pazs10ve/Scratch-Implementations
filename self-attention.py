@@ -4,7 +4,7 @@ import torch.nn.functional as F
 import math
 
 class VanilaSelfAttention(nn.Module):
-    def __init__(self, embed_dim : int, dropout : float=0.1) -> torch.Tensor:
+    def __init__(self, embed_dim : int, dropout : float=0.1) -> None:
         super(VanilaSelfAttention, self).__init__()
 
         self.query = nn.Linear(embed_dim, embed_dim, bias=False)
@@ -13,7 +13,7 @@ class VanilaSelfAttention(nn.Module):
 
         self.attention_dropout = nn.Dropout(dropout)
 
-        self.proj = nn.Linear(embed_dim, embed_dim, bias=False)
+        self.out_proj = nn.Linear(embed_dim, embed_dim, bias=False)
         self.proj_dropout = nn.Dropout(dropout)
         
 
@@ -50,7 +50,7 @@ class VanilaSelfAttention(nn.Module):
         output = torch.matmul(attention_weights, V)
 
         # project the attention output to the input stream 
-        output = self.proj(output)
+        output = self.out_proj(output)
         output = self.proj_dropout(output)
 
         return output
@@ -58,6 +58,7 @@ class VanilaSelfAttention(nn.Module):
 
 
 
+"""
 BATCH_SIZE = 2
 SEQ_LEN = 10
 EMBED_DIM = 64
@@ -67,3 +68,4 @@ x = torch.randn(BATCH_SIZE, SEQ_LEN, EMBED_DIM)
 attention = VanilaSelfAttention(embed_dim=EMBED_DIM, dropout=0.1)
 output = attention(x)
 print("Output shape:", output.shape)  # Expected shape: (BATCH_SIZE, SEQ_LEN, EMBED_DIM)
+"""
