@@ -12,6 +12,8 @@ class MultiQueryAttention(nn.Module):
 
         self.num_heads = num_heads
 
+        # only query tensors are split into N heads
+
         self.query = nn.Linear(embed_dim, embed_dim)
         self.key = nn.Linear(embed_dim, embed_dim // num_heads)
         self.value = nn.Linear(embed_dim, embed_dim // num_heads)
@@ -35,19 +37,19 @@ class MultiQueryAttention(nn.Module):
         K = self.key(x)
         V = self.value(x)
 
+        # split the query tensor into N heads
         Q = Q.reshape(BATCH_SIZE, SEQ_LEN, self.num_heads, EMBED_DIM // self.num_heads).permute(0, 2, 1, 3)
 
-        attention_scores = torch.matmul(Q, K.unsqueeze(1).transpose(2, 3)) / math.sqrt(EMBED_DIM // self.num_heads)
+        attention_scores = torch.matmul(Q, K.unsqueeze(1).transpose(2, 3)) / math.sqrt(EMBED_DIM // self.num_heads)  # add extra dimension at position 1 to match the tensor shapes
 
         if mask is not None:
             attention_scores = attention_scores.masked_fill(mask == 0, float('-inf'))
 
         attention_weights = F.softmax(attention_scores, dim=-1)
 
-
         attention_weights = self.attention_dropout(attention_weights)
 
-        attention_output = torch.matmul(attention_weights, V.unsqueeze(1))
+        attention_output = torch.matmul(attention_weights, V.unsqueeze(1)) # add extra dimension at position 1 to match the tensor shapes
 
         attention_output = attention_output.contiguous().view(BATCH_SIZE, SEQ_LEN, EMBED_DIM)
 
