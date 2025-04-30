@@ -8,7 +8,7 @@ class MultiHeadSelfAttention(nn.Module):
     def __init__(self, embed_dim : int, num_heads : int, dropout : float=0.1) -> None:
         super(MultiHeadSelfAttention, self).__init__()
 
-        assert embed_dim % num_heads == 0, "Embedding dimensions must be divisible by number of heads"
+        assert embed_dim % num_heads == 0, "Stream embedding dimensions must be divisible by number of heads"
 
         self.num_heads = num_heads
 
@@ -35,13 +35,11 @@ class MultiHeadSelfAttention(nn.Module):
         K = self.key(x)
         V = self.value(x)
 
-        Q = Q.reshape(BATCH_SIZE, self.num_heads, SEQ_LEN, EMBED_DIM // self.num_heads)
-        K = K.reshape(BATCH_SIZE, self.num_heads, SEQ_LEN, EMBED_DIM // self.num_heads)
-        V = V.reshape(BATCH_SIZE, self.num_heads, SEQ_LEN, EMBED_DIM // self.num_heads)
-
+        Q = Q.reshape(BATCH_SIZE, SEQ_LEN, self.num_heads, EMBED_DIM // self.num_heads).permute(0, 2, 1, 3)
+        K = K.reshape(BATCH_SIZE, SEQ_LEN, self.num_heads, EMBED_DIM // self.num_heads).permute(0, 2, 1, 3)
+        V = V.reshape(BATCH_SIZE, SEQ_LEN, self.num_heads, EMBED_DIM // self.num_heads).permute(0, 2, 1, 3)
 
         attention_scores = torch.matmul(Q, K.transpose(2, 3)) / math.sqrt(EMBED_DIM // self.num_heads)
-
 
         if mask is not None:
             attention_scores = attention_scores.masked_fill(mask == 0, float('-inf'))
@@ -50,8 +48,6 @@ class MultiHeadSelfAttention(nn.Module):
 
         output = torch.matmul(attention_weights, V)
         output = output.transpose(1, 2).contiguous().view(BATCH_SIZE, SEQ_LEN, -1)
-
-
 
         output_proj = self.out_proj(output)
         output_proj = self.proj_dropout(output_proj)
