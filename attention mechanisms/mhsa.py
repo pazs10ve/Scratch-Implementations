@@ -22,7 +22,7 @@ class MultiHeadSelfAttention(nn.Module):
         self.proj_dropout = nn.Dropout(dropout)
 
 
-    def forward(self, x : torch.Tensor, mask : torch.Tensor=None) -> torch.Tensor:
+    def forward(self, x : torch.Tensor, mask=None) -> torch.Tensor:
         """
         Args: 
             x: Input tensor of shape [BATCH_SIZE, SEQ_LEN, EMBED_DIM]

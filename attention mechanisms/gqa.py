@@ -23,7 +23,7 @@ class GroupedQueryAttention(nn.Module):
         self.out_proj = nn.Linear(embed_dim, embed_dim)
         self.proj_dropout = nn.Dropout(dropout)
 
-    def forward(self, x : torch.Tensor, mask : torch.Tensor=None) -> torch.Tensor:
+    def forward(self, x : torch.Tensor, mask=None) -> torch.Tensor:
         """
         Args:
             x : Input tensor of the shape [BATCH_SIZE, SEQ_LEN, EMBED_DIM]

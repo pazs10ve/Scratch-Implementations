@@ -17,7 +17,7 @@ class VanilaSelfAttention(nn.Module):
         self.proj_dropout = nn.Dropout(dropout)
         
 
-    def forward(self, x : torch.Tensor, mask : torch.Tensor=None) -> torch.Tensor:
+    def forward(self, x : torch.Tensor, mask=None) -> torch.Tensor:
         """
         Args:
             x: Input tensor of shape (batch_size, seq_len, embed_dim)

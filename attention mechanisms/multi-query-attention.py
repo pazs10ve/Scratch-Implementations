@@ -5,7 +5,7 @@ import math
 
 
 class MultiQueryAttention(nn.Module):
-    def __init__(self, embed_dim : torch.Tensor, num_heads : int, dropout : float=0.1) -> None:
+    def __init__(self, embed_dim : int, num_heads : int, dropout : float=0.1) -> None:
         super(MultiQueryAttention, self).__init__()
 
         assert embed_dim % num_heads == 0, "Embedding dimensions should be divisible by NUM_HEADS"
@@ -23,7 +23,7 @@ class MultiQueryAttention(nn.Module):
         self.out_proj = nn.Linear(embed_dim, embed_dim)
         self.proj_dropout = nn.Dropout(dropout)
 
-    def forward(self, x : torch.Tensor, mask : torch.Tensor=None) -> torch.Tensor:
+    def forward(self, x : torch.Tensor, mask=None) -> torch.Tensor:
 
         """
         Args:
