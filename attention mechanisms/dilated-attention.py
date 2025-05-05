@@ -86,6 +86,7 @@ class DilatedAttention(nn.Module):
 
 
 
+"""
 BATCH_SIZE = 4
 SEQ_LEN = 10
 EMBED_DIM = 768
@@ -96,3 +97,4 @@ da = DilatedAttention(embed_dim=EMBED_DIM, num_heads=NUM_HEADS, dilation_factor=
 
 x = torch.randn(BATCH_SIZE, SEQ_LEN, EMBED_DIM)
 print(da(x).shape)
+"""
