@@ -13,9 +13,9 @@ class BlockWiseAttention(nn.Module):
         self.block_size = block_size
         self.causal = causal
 
-        self.query = nn.Linear(embed_size, embed_size)
-        self.key = nn.Linear(embed_size, embed_size)
-        self.value = nn.Linear(embed_size, embed_size)
+        self.query = nn.Linear(embed_size, embed_size, bias=False)
+        self.key = nn.Linear(embed_size, embed_size, bias=False)
+        self.value = nn.Linear(embed_size, embed_size, bias=False)
 
         self.attention_dropout = nn.Dropout(dropout)
         self.out_proj = nn.Linear(embed_size, embed_size)
@@ -91,7 +91,8 @@ class BlockWiseAttention(nn.Module):
 
         return output
 
-# Test
+
+"""
 batch_size = 4
 embed_size = 768
 seq_len = 100
@@ -101,3 +102,4 @@ num_heads = 12
 bwa = BlockWiseAttention(embed_size=embed_size, num_heads=num_heads, block_size=block_size, causal=True)
 x = torch.randn(batch_size, seq_len, embed_size) # torch.size([4, 100, 768])
 print(bwa(x).shape)  # output : torch.Size([4, 100, 768])
+"""

@@ -15,9 +15,9 @@ class DilatedAttention(nn.Module):
         self.head_dim = embed_dim // num_heads
         self.dilation_factor = dilation_factor
 
-        self.query = nn.Linear(embed_dim, embed_dim)
-        self.key = nn.Linear(embed_dim, embed_dim)
-        self.value = nn.Linear(embed_dim, embed_dim)
+        self.query = nn.Linear(embed_dim, embed_dim, bias=False)
+        self.key = nn.Linear(embed_dim, embed_dim, bias=False)
+        self.value = nn.Linear(embed_dim, embed_dim, bias=False)
 
         self.attention_dropout = nn.Dropout(dropout)
         self.out_proj = nn.Linear(embed_dim, embed_dim)
